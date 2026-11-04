@@ -54,6 +54,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 #aimsg{white-space:pre-line}
 .leg{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}
 .leg i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+#catd{margin-top:8px}
+#catd summary{cursor:pointer;font-weight:600;color:var(--acc);margin-bottom:6px}
+.cr{display:flex;gap:6px;margin:6px 0;align-items:center}
+.cr input[type=text]{flex:1;min-width:0}
+.cr input[type=color]{width:46px;height:38px;padding:2px;cursor:pointer}
 h2{font:700 17px Newsreader,Georgia,serif;margin:0 0 6px;padding-left:8px;border-left:3px solid var(--gold)}
 #list{margin:8px 0 0;padding:0;list-style:none;max-height:280px;overflow:auto;font-size:14px}
 #list li{padding:3px 0;border-bottom:1px solid var(--line)}
@@ -87,9 +92,10 @@ textarea{width:100%;min-height:110px}
 </div>
 <div id="bq" class="tools" style="display:none"><strong>Izquierda</strong><label>Filas<input id="lr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="lc" type="number" min="0" max="12" value="3"></label><strong style="margin-left:10px">Centro</strong><label>Filas<input id="cr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="cc" type="number" min="0" max="12" value="4"></label><strong style="margin-left:10px">Derecha</strong><label>Filas<input id="rr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="rc" type="number" min="0" max="12" value="3"></label><span class="hint" style="margin:0">Poné 0 para omitir un bloque. Cada columna es una fila de asientos a lo ancho de ese bloque.</span></div>
 <div id="oe"><strong>Objeto</strong><label>Nombre<input id="oel" maxlength="30"></label><label>Ángulo (°)<input id="oea" type="number" min="0" max="359" step="1"></label><label>Ancho<input id="oew" type="number" min="30" max="900" step="10"></label><label>Alto<input id="oeh" type="number" min="20" max="600" step="10"></label><label>Sillas encima<input id="oen" type="number" min="1" max="20" value="5"></label><button id="oes" class="alt">Poner sillas</button><button id="oer" class="alt">Girar 90°</button><button id="oed" class="alt">Quitar</button></div>
-<div id="ae"><strong>Pasillo</strong><label>Largo (px)<input id="ael" type="number" min="60" max="900" step="10"></label><button id="aer" class="alt">Girar</button><button id="aed" class="alt">Quitar pasillo</button></div><div id="ed"><strong id="edn"></strong><input id="edi" maxlength="80" placeholder="Nombre y cargo" aria-label="Nombre"><select id="edc" aria-label="Categoría"><option value="0">Invitado</option><option value="1">Autoridad</option><option value="2">Docente</option><option value="3">Prensa</option></select><button id="edfree" class="alt">Liberar lugar</button><button id="eddel" class="alt">Quitar silla</button></div>
+<div id="ae"><strong>Pasillo</strong><label>Largo (px)<input id="ael" type="number" min="60" max="900" step="10"></label><button id="aer" class="alt">Girar</button><button id="aed" class="alt">Quitar pasillo</button></div><div id="ed"><strong id="edn"></strong><input id="edi" maxlength="80" placeholder="Nombre y cargo" aria-label="Nombre"><select id="edc" aria-label="Categoría"></select><button id="edfree" class="alt">Liberar lugar</button><button id="eddel" class="alt">Quitar silla</button></div>
 <div class="wrap"><div id="cv"></div></div>
-<p class="hint">Arrastrá para mover. Tocá una silla para asignarle nombre y categoría.</p><div class="leg"><span><i style="background:var(--gold)"></i>Autoridad</span><span><i style="background:#2f8f6b"></i>Docente</span><span><i style="background:#7a4fb0"></i>Prensa</span><span><i style="background:var(--acc)"></i>Invitado</span></div>
+<p class="hint">Arrastrá para mover. Tocá una silla para asignarle nombre y categoría.</p><div class="leg" id="leg"></div>
+<details id="catd"><summary>Categorías y colores</summary><div id="catl"></div><button id="cadd" class="alt">+ Categoría</button></details>
 </section>
 <aside id="side" class="card">
 <div id="aibox"><h2>Asistente IA</h2><textarea id="desc" maxlength="600" style="min-height:70px" placeholder="Ej: acto de 120 personas en el aula magna, escenario con atril y dos banderas, un pasillo central y uno lateral"></textarea><div class="tools" style="margin:8px 0"><button id="aiplan">Armar plano con IA</button><button id="aiord" class="alt">Ordenar por precedencia</button></div><p class="hint">Al usar estas funciones, el texto se envía a Claude para procesarlo. No cargues datos sensibles.</p><p id="aimsg" class="hint" role="status"></p></div>
@@ -129,6 +135,25 @@ function build(){
   }
   draw();save();
 }
+let cats=[{id:0,n:'Invitado',col:'#1c4a7a'},{id:1,n:'Autoridad',col:'#b8891f'},{id:2,n:'Docente',col:'#2f8f6b'},{id:3,n:'Prensa',col:'#7a4fb0'},{id:4,n:'Invitado especial',col:'#c2410c'},{id:5,n:'Familiares',col:'#0e7490'},{id:6,n:'Abanderados',col:'#be123c'},{id:7,n:'Egresados',col:'#4d7c0f'}];
+const txt=h=>{const n=parseInt(h.slice(1),16);return(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255))>150?'#111':'#fff'};
+function renderLeg(){const L=$('#leg');L.innerHTML='';cats.forEach(c=>{const s=document.createElement('span'),i=document.createElement('i');i.style.background=c.col;s.append(i,c.n||'(sin nombre)');L.append(s)})}
+function fillSel(){const s=$('#edc'),v=s.value;s.innerHTML='';cats.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.n||'(sin nombre)';s.appendChild(o)});s.value=v}
+function renderCats(){
+  const L=$('#catl');L.innerHTML='';
+  cats.forEach(c=>{
+    const r=document.createElement('div');r.className='cr';
+    const n=document.createElement('input');n.type='text';n.maxLength=30;n.value=c.n;n.setAttribute('aria-label','Nombre de la categoría');
+    n.oninput=()=>{c.n=n.value.slice(0,30);renderLeg();fillSel();save()};
+    const k=document.createElement('input');k.type='color';k.value=c.col;k.setAttribute('aria-label','Color de la categoría');
+    k.oninput=()=>{c.col=k.value;draw();renderLeg();save()};
+    r.append(n,k);
+    if(c.id!==0){const d=document.createElement('button');d.className='alt';d.textContent='Quitar';d.onclick=()=>{cats=cats.filter(x=>x.id!==c.id);items.forEach(i=>{if(i.c===c.id)i.c=0});renderCats();draw();save()};r.append(d)}
+    L.append(r);
+  });
+  renderLeg();fillSel();
+}
+$('#cadd').onclick=()=>{if(cats.length>=20)return;const id=cats.reduce((m,c)=>Math.max(m,c.id),0)+1;cats.push({id,n:'Nueva categoría',col:'#d94f70'});renderCats();save()};
 let LAB=new Map();
 function seats(){
   const S=items.filter(i=>i.t==='seat'),rows=new Map(),out=[];LAB=new Map();
@@ -148,13 +173,13 @@ function draw(){
   let h=480;
   items.forEach(it=>{
     const d=document.createElement('div');
-    d.className='it '+(it.t==='seat'?'seat'+(it.n?' f':'')+(it.c?' c'+it.c:'')+(sel===it.id?' s':''):it.t==='aisle'?'aisle '+it.o+(sel===it.id?' s':''):'obj'+(it.big?' big':'')+(sel===it.id?' s':''));
+    d.className='it '+(it.t==='seat'?'seat'+(it.n?' f':'')+(sel===it.id?' s':''):it.t==='aisle'?'aisle '+it.o+(sel===it.id?' s':''):'obj'+(it.big?' big':'')+(sel===it.id?' s':''));
     d.style.left=it.x+'px';d.style.top=it.y+'px';d.dataset.id=it.id;
     if(it.t==='aisle'){d.style.width=(it.o==='v'?28:it.len)+'px';d.style.height=(it.o==='v'?it.len:28)+'px'}
     if(it.rot)d.style.transform='rotate('+it.rot+'deg)';
     if(it.t==='obj'&&it.w){d.style.width=d.style.minWidth=it.w+'px'}
     if(it.t==='obj'&&it.h)d.style.height=it.h+'px'
-    if(it.t==='seat'){d.textContent=it.n?ini(it.n):num.get(it.id).split('·').pop();d.title=num.get(it.id)+(it.n?': '+it.n:'');if(it.n)d.dataset.n=it.n}
+    if(it.t==='seat'){d.textContent=it.n?ini(it.n):num.get(it.id).split('·').pop();d.title=num.get(it.id)+(it.n?': '+it.n:'');if(it.n)d.dataset.n=it.n;const ct=cats.find(x=>x.id===(it.c||0));if(ct&&((it.c||0)!==0||it.n)){d.style.background=ct.col;d.style.borderColor=ct.col;d.style.color=txt(ct.col)}}
     else{d.textContent=it.l;if(it.t==='obj'&&sel===it.id){const g=document.createElement('span');g.className='rot';g.textContent='↻';g.title='Arrastrá para girar';d.appendChild(g);const q=document.createElement('span');q.className='rsz';q.textContent='↘';q.title='Arrastrá para agrandar o achicar';d.appendChild(q)}}
     cv.appendChild(d);h=Math.max(h,it.y+80);
   });
@@ -365,20 +390,20 @@ function clean(a){
   return a.slice(0,600).map((o,i)=>{
     if(!o||typeof o!=='object'||!['seat','obj','aisle'].includes(o.t))return null;
     const it={id:i+1,t:o.t,x:num(o.x,0,860),y:num(o.y,0,3000),n:String(o.n||'').slice(0,80)};
-    if(it.t==='seat'){it.c=[0,1,2,3].includes(o.c)?o.c:0;if(['L','C','R'].includes(o.z))it.z=o.z;if(o.tb){it.tb=num(o.tb,1,99);it.m=num(o.m,0,7)}}
+    if(it.t==='seat'){it.c=cats.some(x=>x.id===o.c)?o.c:0;if(['L','C','R'].includes(o.z))it.z=o.z;if(o.tb){it.tb=num(o.tb,1,99);it.m=num(o.m,0,7)}}
     else{it.l=String(o.l||'').slice(0,30);if(o.big)it.big=1;if(o.rot)it.rot=num(o.rot,0,359);if(o.w)it.w=num(o.w,30,900);if(o.h)it.h=num(o.h,20,600)}
     if(it.t==='aisle'){it.o=o.o==='h'?'h':'v';it.len=num(o.len,60,900)}
     return it;
   }).filter(Boolean);
 }
-function save(){try{localStorage.setItem('actos-plano',JSON.stringify({items,uid,names:$('#names').value}))}catch(e){}}
+function save(){try{localStorage.setItem('actos-plano',JSON.stringify({items,uid,cats,names:$('#names').value}))}catch(e){}}
 $('#names').addEventListener('input',save);
 (function init(){
   try{
     const s=JSON.parse(localStorage.getItem('actos-plano')||'null');
-    if(s&&Array.isArray(s.items)){items=clean(s.items);if(items.length){uid=items.reduce((m,i)=>Math.max(m,i.id),0)+1;$('#names').value=String(s.names||'').slice(0,8000);draw();return}}
+    if(s&&Array.isArray(s.items)){if(Array.isArray(s.cats)){const cc=s.cats.slice(0,20).filter(x=>x&&Number.isInteger(x.id)&&x.id>=0&&/^#[0-9a-f]{6}$/i.test(x.col)).map(x=>({id:x.id,n:String(x.n||'').slice(0,30),col:x.col}));if(cc.some(x=>x.id===0))cats=cc}items=clean(s.items);if(items.length){renderCats();uid=items.reduce((m,i)=>Math.max(m,i.id),0)+1;$('#names').value=String(s.names||'').slice(0,8000);draw();return}}
   }catch(e){}
-  build();hist=[];
+  renderCats();build();hist=[];
 })();
 </script>
 </body>
