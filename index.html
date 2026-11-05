@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Asistente de Actos: planimetría</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600&family=Newsreader:wght@500;700&display=swap">
@@ -52,6 +53,18 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .rsz{position:absolute;bottom:-14px;right:-14px;width:26px;height:26px;border-radius:6px;background:var(--acc);color:var(--accfg);display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;cursor:nwse-resize;touch-action:none;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 @media print{.rot,.rsz{display:none}}
 #aimsg{white-space:pre-line}
+header{position:relative}
+.pres header,.pres #side,.pres .tools,.pres details,.pres .hint,.pres #ed,.pres #ae,.pres #oe,.pres #me,.pres #cards{display:none!important}
+.pres main{display:block;padding:8px}
+.pres .card{border:0;box-shadow:none;background:transparent}
+.pres .wrap{max-height:none;overflow:visible;border:0;background:none}
+.pres #cv{background:none}
+.scale{position:absolute;height:12px;border:2px solid var(--fg);border-top:0;font-size:11px;text-align:center;line-height:22px;pointer-events:none;color:var(--fg)}
+#cards{display:none;grid-template-columns:repeat(3,1fr);gap:6mm;color:#000;background:#fff}
+.pcard{border:1px dashed #777;height:44mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4mm;break-inside:avoid}
+.pcard b{font:700 20pt Newsreader,Georgia,serif}
+.pcard small{font-size:11pt;margin-top:2mm}
+.pcard i{font-style:normal;font-size:10pt;color:#444;margin-top:2mm}
 .obj.st,.obj.st.s{z-index:0}
 .it.m{outline:2px dashed var(--sel);outline-offset:2px}
 .mq{position:absolute;border:1px dashed var(--sel);background:color-mix(in srgb,var(--sel) 15%,transparent);pointer-events:none;z-index:5}
@@ -75,7 +88,81 @@ h2{font:700 17px Newsreader,Georgia,serif;margin:0 0 6px;padding-left:8px;border
 #ed.on{display:flex}
 textarea{width:100%;min-height:110px}
 .hint{font-size:12px;color:var(--muted);margin:4px 0 8px}
+/* ===== Tema visual v2 ===== */
+:root{--panel:#f4f6fa;--grid:rgba(28,74,122,.06);--grid2:rgba(28,74,122,.12);--shadow:0 1px 2px rgba(16,28,48,.06),0 10px 26px -14px rgba(16,28,48,.28);--r:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--panel:#202b3b;--grid:rgba(255,255,255,.045);--grid2:rgba(255,255,255,.09);--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px -16px rgba(0,0,0,.75)}:root:not([data-theme="light"]) header{background:linear-gradient(135deg,#1f3250,#131f30);color:#e8edf4}}
+:root[data-theme="dark"]{--panel:#202b3b;--grid:rgba(255,255,255,.045);--grid2:rgba(255,255,255,.09);--shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px -16px rgba(0,0,0,.75)}
+:root[data-theme="dark"] header{background:linear-gradient(135deg,#1f3250,#131f30);color:#e8edf4}
+body{background:radial-gradient(900px 380px at 90% -80px,color-mix(in srgb,var(--acc) 12%,transparent),transparent),var(--bg);-webkit-font-smoothing:antialiased}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:20px clamp(16px,4vw,40px) 20px;background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 94%,#000),color-mix(in srgb,var(--acc) 62%,#0b1a2e));border-bottom:0;box-shadow:inset 0 -4px 0 var(--gold)}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand svg{flex:none;width:48px;height:48px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+h1{font:600 clamp(22px,3.2vw,31px)/1.1 Newsreader,Georgia,serif;letter-spacing:.01em}
+header p{margin:3px 0 0;opacity:.82;font-size:14px}
+#theme{margin-left:auto;background:rgba(255,255,255,.12);color:inherit;border:1px solid color-mix(in srgb,currentColor 45%,transparent);border-radius:999px;padding:6px 14px;min-height:0;font-size:12px;box-shadow:none}
+#theme:hover{background:rgba(255,255,255,.22);filter:none}
+main{max-width:1500px;margin:0 auto;gap:18px;padding:18px clamp(12px,3vw,32px) 36px}
+@media(min-width:1000px){main{grid-template-columns:minmax(0,1fr) 340px}#side{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;scrollbar-width:thin}}
+.card{border-radius:var(--r);box-shadow:var(--shadow);padding:16px;border-color:color-mix(in srgb,var(--line) 75%,transparent)}
+.tabs{display:flex;gap:4px;padding:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:1 0 auto;background:transparent;color:var(--muted);border:0;border-radius:9px;padding:8px 14px;min-height:36px;box-shadow:none}
+.tabs button:hover{background:transparent;color:var(--fg);filter:none}
+.tabs button.on{background:var(--card);color:var(--acc);box-shadow:0 1px 3px rgba(16,28,48,.18)}
+.tp{margin-bottom:12px}.tp[hidden]{display:none!important}
+.tools{gap:10px;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.tools.act{background:transparent;border:0;padding:0;margin:4px 0 10px}
+.sec h3{font:600 16px Newsreader,Georgia,serif;margin:0 0 8px;color:var(--acc)}
+.sec+.sec{margin-top:14px}
+label{font-size:12px;font-weight:600;gap:4px}
+input,select,textarea{background:var(--card);border-radius:8px;padding:7px 10px;min-height:36px}
+input:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 22%,transparent)}
+input[type=checkbox]{min-height:0;width:17px;height:17px;padding:0;accent-color:var(--acc)}
+input[type=range]{min-height:0;padding:0;accent-color:var(--acc)}
+button{border-radius:9px;padding:8px 14px;min-height:38px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 2px rgba(16,28,48,.2)}
+button:active{transform:translateY(1px)}
+button.alt{background:var(--card);border-color:var(--line);box-shadow:none}
+button.alt:hover{background:color-mix(in srgb,var(--acc) 10%,var(--card));border-color:var(--acc)}
+.wrap{border-radius:14px;background:var(--card);box-shadow:inset 0 2px 10px rgba(16,28,48,.08);scrollbar-width:thin}
+#cv{background-color:var(--card);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px);background-size:20px 20px,20px 20px,100px 100px,100px 100px}
+.seat{border-radius:11px 11px 7px 7px;background:linear-gradient(var(--card),var(--seat));box-shadow:inset 0 5px 0 color-mix(in srgb,var(--acc) 22%,transparent),0 2px 3px rgba(16,28,48,.22)}
+.seat.f{background:var(--acc);box-shadow:inset 0 5px 0 rgba(0,0,0,.2),0 2px 3px rgba(16,28,48,.28)}
+.seat.s,.seat.f.s{box-shadow:0 0 0 3px var(--sel),0 0 0 7px color-mix(in srgb,var(--sel) 25%,transparent)}
+.obj{border-radius:8px;background:color-mix(in srgb,var(--gold) 14%,var(--card));color:color-mix(in srgb,var(--gold) 75%,var(--fg));box-shadow:0 3px 8px -2px rgba(16,28,48,.28),inset 0 1px 0 rgba(255,255,255,.35)}
+.obj.big{border-radius:10px;background:linear-gradient(color-mix(in srgb,var(--gold) 32%,var(--card)),color-mix(in srgb,var(--gold) 14%,var(--card)))}
+.aisle{border-radius:6px;border-color:color-mix(in srgb,var(--muted) 55%,transparent);background:repeating-linear-gradient(45deg,transparent 0 7px,color-mix(in srgb,var(--line) 70%,transparent) 7px 9px)}
+#ed,#ae,#oe,#me{background:var(--card);border-left-width:4px;border-radius:10px;box-shadow:var(--shadow);padding:10px 12px;gap:8px;align-items:end;margin-bottom:12px}
+.leg{gap:8px;margin:10px 0 4px}
+.leg span{display:inline-flex;align-items:center;padding:3px 11px 3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--fg)}
+.leg i{width:11px;height:11px;margin-right:7px;box-shadow:0 0 0 2px var(--card),0 0 0 3px var(--line)}
+details{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:0 12px;margin-top:12px}
+details>summary{list-style:none;cursor:pointer;padding:11px 0;font-weight:600;color:var(--acc);display:flex;align-items:center;justify-content:space-between}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .2s;margin-right:4px}
+details[open]>summary::after{transform:rotate(-135deg)}
+details[open]{padding-bottom:12px}
+details .tools{background:transparent;border:0;padding:0}
+h2{display:flex;align-items:center;gap:8px;font:600 18px Newsreader,Georgia,serif;padding-left:0;border-left:0;margin:0 0 8px}
+h2::before{content:"";width:5px;height:18px;border-radius:3px;background:var(--gold)}
+#aibox{padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+#list{scrollbar-width:thin}
+#list li{padding:6px 8px;border:0;border-radius:6px}
+#list li:nth-child(odd){background:var(--panel)}
+#names{min-height:140px}
+.pres .tabs,.pres .tp,.pres .act{display:none!important}
+@media print{.brand svg,#theme,.tabs,.tp,.sec,.act{display:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(max-width:600px){header{padding:14px 14px}.brand svg{width:40px;height:40px}#theme{margin-left:0}.tabs button{padding:8px 11px}.card{padding:12px}}
+main{grid-template-columns:minmax(0,1fr)}
+@media(min-width:1000px){main{grid-template-columns:minmax(0,1fr) 340px}}
+main>*{min-width:0}
+select{max-width:100%}
+.tabs button.on{background:color-mix(in srgb,var(--acc) 16%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 50%,transparent),0 1px 3px rgba(16,28,48,.15)}
+.act button{padding:6px 12px;min-height:34px;font-size:13px}
+.act{gap:8px}
+input[type=file]{padding:5px;max-width:100%}
+input[type=file]::file-selector-button{font:600 13px "Libre Franklin",system-ui,sans-serif;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:7px;padding:5px 10px;margin-right:8px;cursor:pointer}
 @page{size:A4 landscape;margin:8mm}
+@media print{body.pc header,body.pc main{display:none}body.pc #cards{display:grid}}
 @media print{
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 body{background:#fff}
@@ -92,30 +179,47 @@ main{display:block;padding:0}
 </head>
 <body>
 <header>
-<h1>Asistente de Actos: planimetría</h1>
-<p>Armá el plano, ubicá a las personas y exportá el orden de asientos.</p>
+<div class="brand"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="#e0b84a" stroke-width="2"/><path d="M10 31a16 16 0 0 1 28 0" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><path d="M14 35a11 11 0 0 1 20 0" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".8"/><circle cx="24" cy="17" r="3.2" fill="#e0b84a"/><path d="M18 40h12" stroke="#e0b84a" stroke-width="2.5" stroke-linecap="round"/></svg>
+<div><h1>Asistente de Actos</h1><p>Planimetría y ubicación de personas para actos y ceremonias</p></div></div>
+<button id="theme" type="button" aria-label="Cambiar tema de color">Tema: auto</button>
 </header>
 <main>
 <section class="card">
+<div class="tabs" role="tablist" aria-label="Herramientas">
+<button type="button" data-tab="esp" role="tab">Espacio</button><button type="button" data-tab="add" role="tab">Agregar</button><button type="button" data-tab="mesa" role="tab">Mesas</button><button type="button" data-tab="ban" role="tab">Banderas</button><button type="button" data-tab="plan" role="tab">Planos</button>
+</div>
+<div class="tp" data-tab="esp">
 <div class="tools">
 <label>Tipo de espacio<select id="kind"><option value="libre">Plano libre (vacío)</option><option value="aud" selected>Auditorio</option><option value="blq">Auditorio por bloques</option><option value="anfi">Anfiteatro (filas en arco)</option><option value="teatro">Teatro (platea y palcos)</option><option value="micro">Microcine</option><option value="sala">Sala de reuniones</option><option value="aula">Aula</option><option value="u">Salón en U</option><option value="banq">Banquete (mesas de 8)</option></select></label>
 <label>Filas<input id="r" type="number" min="1" max="20" value="6"></label>
-<label>Columnas<input id="c" type="number" min="2" max="24" value="10"></label>
-<label>Bloques (auditorio)<select id="blk"><option value="3">3: izquierda, centro, derecha</option><option value="2">2: izquierda y derecha</option><option value="1">1: sin divisiones</option></select></label><button id="gen">Generar plano</button><label>Zoom<select id="zoom"><option value="1">100%</option><option value="0.8">80%</option><option value="0.6">60%</option></select></label>
+<label>Columnas<input id="c" type="number" min="2" max="24" value="11"></label>
+<label>Bloques (auditorio)<select id="blk"><option value="3">3: izquierda, centro, derecha</option><option value="2">2: izquierda y derecha</option><option value="1">1: sin divisiones</option></select></label><button id="gen">Generar plano</button><label>Zoom<select id="zoom"><option value="1">100%</option><option value="0.8">80%</option><option value="0.6">60%</option></select></label><label>Escala (px por metro)<input id="esc" type="number" min="10" max="200" value="40"></label>
 </div>
+<div id="bq" class="tools" style="display:none"><strong>Izquierda</strong><label>Filas<input id="lr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="lc" type="number" min="0" max="12" value="3"></label><strong style="margin-left:10px">Centro</strong><label>Filas<input id="cr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="cc" type="number" min="0" max="12" value="4"></label><strong style="margin-left:10px">Derecha</strong><label>Filas<input id="rr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="rc" type="number" min="0" max="12" value="3"></label><span class="hint" style="margin:0">Poné 0 para omitir un bloque. Cada columna es una fila de asientos a lo ancho de ese bloque.</span></div>
+</div>
+<div class="tp" data-tab="add">
 <div class="tools">
 <button class="alt" data-add="seat">+ Silla</button>
 <button class="alt" data-add="Atril">+ Atril</button>
 <button class="alt" data-add="Bandera">+ Bandera</button>
 <button class="alt" data-add="Mesa">+ Mesa</button><button class="alt" data-add="MA">+ Mesa académica</button><button class="alt" data-add="ESC">+ Escenario</button><button class="alt" data-add="av">+ Pasillo vertical</button><button class="alt" data-add="ah">+ Pasillo horizontal</button>
-<button class="alt" id="undo">Deshacer</button><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="msm"> Seleccionar varios</label><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="shn"> Ver nombres en el plano</label><button class="alt" id="print">Imprimir o guardar PDF</button><button class="alt" id="wipe">Borrar datos guardados</button>
 </div>
+</div>
+<div class="tp" data-tab="mesa">
 <div class="tools"><label>Mesa protocolar<select id="mt"><option value="cuadrada">Cuadrada</option><option value="ingles">Rectangular, presidencia inglesa</option><option value="frances">Rectangular, presidencia francesa</option><option value="ovalada">Ovalada</option><option value="imperial">Imperial</option><option value="u">En forma de U</option><option value="herradura">En forma de herradura</option><option value="t">En forma de T</option><option value="peine">En forma de peine</option></select></label><label>Sillas por lado<input id="mn" type="number" min="2" max="12" value="4"></label><button id="mtb">Agregar mesa con sillas</button></div>
-<details id="bgd"><summary>Plano de fondo (PDF o imagen)</summary><div class="tools" style="margin-top:8px"><label>Archivo<input id="bgf" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"></label><label>Página (PDF)<input id="bgp" type="number" min="1" max="50" value="1"></label><label>Transparencia<input id="bgo" type="range" min="10" max="100" value="45"></label><label>Tamaño<input id="bgs" type="range" min="20" max="300" value="100"></label><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="bgm"> Mover el fondo</label><button id="bgx" class="alt">Quitar fondo</button></div><p id="bgmsg" class="hint" role="status"></p></details>
-<details id="fld"><summary>Banderas (orden alfabético)</summary><div class="tools" style="margin-top:8px"><label style="flex:1 1 240px">Países (uno por línea o separados por coma)<textarea id="fl" maxlength="2000" style="min-height:70px"></textarea></label><label>País anfitrión<input id="fh" maxlength="40" placeholder="Argentina"></label><label>Lugar del anfitrión<select id="fp"><option value="c">Al centro</option><option value="r">A la derecha</option><option value="l">A la izquierda</option><option value="a">Según el orden alfabético</option></select></label><button id="fb">Ordenar y colocar</button></div><p id="flm" class="hint" role="status"></p></details>
-<div id="bq" class="tools" style="display:none"><strong>Izquierda</strong><label>Filas<input id="lr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="lc" type="number" min="0" max="12" value="3"></label><strong style="margin-left:10px">Centro</strong><label>Filas<input id="cr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="cc" type="number" min="0" max="12" value="4"></label><strong style="margin-left:10px">Derecha</strong><label>Filas<input id="rr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="rc" type="number" min="0" max="12" value="3"></label><span class="hint" style="margin:0">Poné 0 para omitir un bloque. Cada columna es una fila de asientos a lo ancho de ese bloque.</span></div>
-<div id="me"><strong id="men"></strong><button id="mel" class="alt">Bloquear</button><button id="meu" class="alt">Desbloquear</button><button id="mec" class="alt">Duplicar</button><button id="med" class="alt">Quitar</button><button id="mex" class="alt">Deseleccionar</button></div>
-<div id="oe"><strong>Objeto</strong><label>Nombre<input id="oel" maxlength="30"></label><label>Ángulo (°)<input id="oea" type="number" min="0" max="359" step="1"></label><label>Ancho<input id="oew" type="number" min="30" max="900" step="10"></label><label>Alto<input id="oeh" type="number" min="20" max="600" step="10"></label><label>Sillas encima<input id="oen" type="number" min="1" max="20" value="5"></label><button id="oes" class="alt">Poner sillas</button><button id="oer" class="alt">Girar 90°</button><label>Forma<select id="oesh"><option value="rect">Rectángulo</option><option value="round">Redondeado</option><option value="oval">Ovalado</option><option value="semi">Semicírculo</option><option value="trap">Trapecio</option><option value="trapi">Trapecio invertido</option><option value="hex">Hexágono</option></select></label><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="oest"> Es escenario (queda debajo)</label><button class="alt lkt">Bloquear</button><button id="oed" class="alt">Quitar</button></div>
+</div>
+<div class="tp" data-tab="ban">
+<div id="fld" class="sec"><h3>Banderas (orden alfabético)</h3><div class="tools" style="margin-top:8px"><label style="flex:1 1 240px">Países (uno por línea o separados por coma)<textarea id="fl" maxlength="2000" style="min-height:70px"></textarea></label><label>País anfitrión<input id="fh" maxlength="40" placeholder="Argentina"></label><label>Lugar del anfitrión<select id="fp"><option value="c">Al centro</option><option value="r">A la derecha</option><option value="l">A la izquierda</option><option value="a">Según el orden alfabético</option></select></label><button id="fb">Ordenar y colocar</button></div><p id="flm" class="hint" role="status"></p></div>
+</div>
+<div class="tp" data-tab="plan">
+<div id="bkd" class="sec"><h3>Copia de seguridad</h3><div class="tools" style="margin-top:8px"><button id="bkx">Guardar copia en un archivo</button><label>Restaurar copia<input id="bki" type="file" accept=".json,application/json"></label></div><p id="bkm" class="hint" role="status"></p></div>
+<div id="pld" class="sec"><h3>Mis planos guardados</h3><div class="tools" style="margin-top:8px"><label>Nombre del plano<input id="pln" maxlength="40" placeholder="Acto aniversario 2026"></label><button id="pls">Guardar plano</button><label>Guardados<select id="plsel"></select></label><button id="plgo" class="alt">Abrir</button><button id="pldup" class="alt">Duplicar</button><button id="pldel" class="alt">Borrar</button></div><p id="plm" class="hint" role="status"></p></div>
+</div>
+<div class="tools act">
+<button class="alt" id="undo">Deshacer</button><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="msm"> Seleccionar varios</label><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="shn"> Ver nombres en el plano</label><button class="alt" id="print">Imprimir / PDF</button><button class="alt" id="presb">Modo presentación</button><button class="alt" id="wipe">Borrar datos</button>
+</div>
+<div id="me"><strong id="men"></strong><button id="mel" class="alt">Bloquear</button><button id="meu" class="alt">Desbloquear</button><button id="mec" class="alt">Duplicar</button><button id="med" class="alt">Quitar</button><button id="mex" class="alt">Deseleccionar</button><span class="hint" style="margin:0 0 0 6px">Alinear:</span><button class="alt" data-al="l">Izq.</button><button class="alt" data-al="c">Centro</button><button class="alt" data-al="r">Der.</button><button class="alt" data-al="t">Arriba</button><button class="alt" data-al="m">Medio</button><button class="alt" data-al="b">Abajo</button><span class="hint" style="margin:0 0 0 6px">Distribuir:</span><button class="alt" data-al="dh">Horizontal</button><button class="alt" data-al="dv">Vertical</button></div>
+<div id="oe"><strong>Objeto</strong><label>Nombre<input id="oel" maxlength="30"></label><label>Ángulo (°)<input id="oea" type="number" min="0" max="359" step="1"></label><label>Ancho<input id="oew" type="number" min="30" max="900" step="10"></label><label>Alto<input id="oeh" type="number" min="20" max="600" step="10"></label><label>Sillas encima<input id="oen" type="number" min="1" max="20" value="5"></label><button id="oes" class="alt">Poner sillas</button><button id="oer" class="alt">Girar 90°</button><span id="oem" class="hint" style="margin:0"></span><label>Forma<select id="oesh"><option value="rect">Rectángulo</option><option value="round">Redondeado</option><option value="oval">Ovalado</option><option value="semi">Semicírculo</option><option value="trap">Trapecio</option><option value="trapi">Trapecio invertido</option><option value="hex">Hexágono</option></select></label><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="oest"> Es escenario (queda debajo)</label><button class="alt lkt">Bloquear</button><button id="oed" class="alt">Quitar</button></div>
 <div id="ae"><strong>Pasillo</strong><label>Largo (px)<input id="ael" type="number" min="60" max="900" step="10"></label><button id="aer" class="alt">Girar</button><button class="alt lkt">Bloquear</button><button id="aed" class="alt">Quitar pasillo</button></div><div id="ed"><strong id="edn"></strong><input id="edi" maxlength="80" placeholder="Nombre y cargo" aria-label="Nombre"><select id="edc" aria-label="Categoría"></select><button id="edfree" class="alt">Liberar lugar</button><button class="alt lkt">Bloquear</button><button id="eddel" class="alt">Quitar silla</button></div>
 <div class="wrap"><div id="cv"></div></div>
 <p class="hint">Arrastrá para mover. Tocá una silla para asignarle nombre y categoría.</p><div class="leg" id="leg"></div>
@@ -126,11 +230,13 @@ main{display:block;padding:0}
 <h2>Invitados</h2>
 <p class="hint">Un nombre por línea. El primero ocupa el lugar 0 (centro de la primera fila), luego van los impares hacia la derecha y los pares hacia la izquierda, fila por fila, según el orden de precedencia. Si elegís una zona, solo se completan los lugares de esa zona.</p>
 <textarea id="names" maxlength="8000" placeholder="Rector/a&#10;Vicerrector/a&#10;Decano/a"></textarea>
-<div class="tools" style="margin-top:8px"><label>Asignar en la zona<select id="zone"><option value="">Todo el salón</option><option value="L">Izquierda</option><option value="C">Centro</option><option value="R">Derecha</option></select></label><button id="fill">Asignar en orden</button><button id="chk" class="alt">Revisar plano</button><button id="clear" class="alt">Liberar todos</button></div>
+<div class="tools" style="margin-top:8px"><label>Asignar en la zona<select id="zone"><option value="">Todo el salón</option><option value="L">Izquierda</option><option value="C">Centro</option><option value="R">Derecha</option></select></label><button id="fill">Asignar en orden</button><button id="chk" class="alt">Revisar plano</button><button id="clear" class="alt">Liberar todos</button><button id="csvx" class="alt">Exportar a Excel (CSV)</button><button id="cardsb" class="alt">Tarjetas de lugar</button><label>Importar lista (CSV o TXT)<input id="csvi" type="file" accept=".csv,.txt,text/csv,text/plain"></label></div><p id="csvm" class="hint" role="status"></p>
 <h2>Ubicaciones</h2>
 <ul id="list"></ul>
 </aside>
 </main>
+<button id="pexit" type="button" style="display:none;position:fixed;top:10px;right:10px;z-index:50">Salir (Esc)</button>
+<div id="cards"></div>
 <script>
 const $=s=>document.querySelector(s),cv=$('#cv');
 let items=[],sel=null,uid=1;
@@ -196,7 +302,7 @@ function seats(){
 }
 function ini(n){return n.trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase()}
 function draw(){
-  cv.innerHTML='';cv.appendChild(bgEl);
+  cv.innerHTML='';
   seats();const num=LAB;
   let h=480;
   items.forEach(it=>{
@@ -214,7 +320,8 @@ function draw(){
     if(it.lk){const lb=document.createElement('span');lb.className='lkb';lb.textContent='\uD83D\uDD12';d.appendChild(lb)}
     cv.appendChild(d);h=Math.max(h,it.y+80);
   });
-  if(bg.w)h=Math.max(h,bg.y+bg.h*bg.s+20);cv.style.minHeight=h+'px';
+  cv.style.minHeight=h+'px';
+  {const sb=document.createElement('div');sb.className='scale';sb.style.width=((+$('#esc').value||40)*5)+'px';sb.style.left='20px';sb.style.top=(h-30)+'px';sb.textContent='5 m';cv.appendChild(sb)}
   list();
 }
 function list(){
@@ -231,14 +338,13 @@ function editor(){
   $('#ae').classList.toggle('on',!!it&&it.t==='aisle');
   $('#oe').classList.toggle('on',!!it&&it.t==='obj');
   if(!it)return;
-  if(it.t==='obj'){const el=cv.querySelector('[data-id="'+it.id+'"]');$('#oel').value=it.l;$('#oea').value=it.rot||0;$('#oesh').value=it.sh&&SHAPES[it.sh]?it.sh:'rect';$('#oest').checked=!!it.st;$('#oew').value=it.w||(el?el.offsetWidth:'');$('#oeh').value=it.h||(el?el.offsetHeight:'');return}
+  if(it.t==='obj'){const el=cv.querySelector('[data-id="'+it.id+'"]');$('#oel').value=it.l;$('#oea').value=it.rot||0;$('#oesh').value=it.sh&&SHAPES[it.sh]?it.sh:'rect';{const ee=+$('#esc').value||40,ww=it.w||(el?el.offsetWidth:0),hh=it.h||(el?el.offsetHeight:0);$('#oem').textContent=ww?('\u2248 '+(ww/ee).toFixed(1)+' m \u00d7 '+(hh/ee).toFixed(1)+' m'):''}$('#oest').checked=!!it.st;$('#oew').value=it.w||(el?el.offsetWidth:'');$('#oeh').value=it.h||(el?el.offsetHeight:'');return}
   if(it.t==='aisle'){$('#ael').value=it.len;return}
   seats();const num=LAB.get(sel);
   $('#edn').textContent='Lugar '+num;$('#edi').value=it.n;$('#edc').value=it.c||0;
 }
-let drag=null,rotd=null,rsd=null,bgd=null,hist=[],catMap=Object.create(null);function snap(){hist.push(JSON.stringify(items));if(hist.length>40)hist.shift()}
+let drag=null,rotd=null,rsd=null,hist=[],catMap=Object.create(null);function snap(){hist.push(JSON.stringify(items));if(hist.length>40)hist.shift()}
 cv.addEventListener('pointerdown',e=>{
-  if($('#bgm').checked&&bg.w&&!e.target.closest('.it')){bgd={sx:e.clientX,sy:e.clientY,x0:bg.x,y0:bg.y};cv.setPointerCapture(e.pointerId);return}
   if(e.target.classList.contains('rsz')){
     const d=e.target.parentNode,it=items.find(i=>i.id==d.dataset.id);if(!it)return;
     rsd={it,d,sx:e.clientX,sy:e.clientY,w0:d.offsetWidth,h0:d.offsetHeight,pre:JSON.stringify(items),moved:false};
@@ -261,7 +367,6 @@ cv.addEventListener('pointerdown',e=>{
 });
 cv.addEventListener('pointermove',e=>{
   if(mq){updMq(e);return}
-  if(bgd){const z=+$('#zoom').value;bg.x=Math.round(bgd.x0+(e.clientX-bgd.sx)/z);bg.y=Math.round(bgd.y0+(e.clientY-bgd.sy)/z);bgDraw();return}
   if(rsd){
     const z=+$('#zoom').value,t=-(rsd.it.rot||0)*Math.PI/180,dx=(e.clientX-rsd.sx)/z,dy=(e.clientY-rsd.sy)/z;
     const lx=dx*Math.cos(t)-dy*Math.sin(t),ly=dx*Math.sin(t)+dy*Math.cos(t);
@@ -289,7 +394,6 @@ cv.addEventListener('pointermove',e=>{
 });
 cv.addEventListener('pointerup',()=>{
   if(mq){endMq();return}
-  if(bgd){bgd=null;saveBgMeta();return}
   if(rsd){const r=rsd;rsd=null;if(r.moved){hist.push(r.pre);if(hist.length>40)hist.shift()}draw();editor();save();return}
   if(rotd){const r=rotd;rotd=null;hist.push(r.pre);if(hist.length>40)hist.shift();
     if(!r.moved)r.it.rot=((r.it.rot||0)+90)%360;
@@ -307,7 +411,7 @@ $('#edi').addEventListener('input',e=>{
 $('#edfree').onclick=()=>{const it=items.find(i=>i.id===sel);if(it){it.n='';$('#edi').value='';draw();save()}};
 $('#eddel').onclick=()=>{snap();items=items.filter(i=>i.id!==sel);sel=null;draw();editor();save()};
 $('#gen').onclick=()=>{if(!items.some(i=>i.n)||confirm('Se reemplaza el plano actual y se pierden los nombres asignados. ¿Continuar?'))build()};
-$('#kind').onchange=()=>{const k=$('#kind').value,D={banq:[2,3],teatro:[8,12],sala:[1,6],micro:[5,8]}[k]||[6,10];$('#r').value=D[0];$('#c').value=D[1];$('#bq').style.display=k==='blq'?'flex':'none'};
+$('#kind').onchange=()=>{const k=$('#kind').value,D={banq:[2,3],teatro:[8,12],sala:[1,6],micro:[5,8]}[k]||[6,11];$('#r').value=D[0];$('#c').value=D[1];$('#bq').style.display=k==='blq'?'flex':'none'};
 $('#zoom').onchange=e=>{cv.style.zoom=e.target.value};
 if(innerWidth<600){$('#zoom').value='0.6';cv.style.zoom='0.6'}
 $('#shn').onchange=e=>cv.classList.toggle('shn',e.target.checked);
@@ -344,15 +448,86 @@ $('#pal').onchange=e=>{const P=PALS[e.target.value];cats.forEach((c,i)=>{if(P[i]
 $('#sym').onchange=e=>{cv.classList.toggle('sym',e.target.checked);renderLeg();try{localStorage.setItem('actos-sym',e.target.checked?'1':'0')}catch(err){}};
 try{if(localStorage.getItem('actos-sym')==='1'){$('#sym').checked=true;cv.classList.add('sym')}}catch(err){}
 function fitPrint(){
-  const bw=bg.w?bg.x+bg.w*bg.s:0,w=Math.max(900,bw),hh=Math.max(cv.scrollHeight,parseInt(cv.style.minHeight)||0),k=Math.min(1,1000/w,600/hh);
+  const w=900,hh=Math.max(cv.scrollHeight,parseInt(cv.style.minHeight)||0),k=Math.min(1,1000/w,600/hh);
   cv.dataset.z=cv.style.zoom||'';cv.style.zoom=k;
   const r=document.documentElement;r.dataset.pt=r.getAttribute('data-theme')||'';r.setAttribute('data-theme','light');
 }
 function unfit(){
-  cv.style.zoom=cv.dataset.z||'';
+  cv.style.zoom=cv.dataset.z||'';document.body.classList.remove('pc');
   const r=document.documentElement;if(r.dataset.pt)r.setAttribute('data-theme',r.dataset.pt);else r.removeAttribute('data-theme');
 }
 window.addEventListener('beforeprint',fitPrint);window.addEventListener('afterprint',unfit);
+$('#esc').oninput=()=>{draw();save()};
+const PK='actos-planos';
+function plans(){try{const a=JSON.parse(localStorage.getItem(PK)||'[]');return Array.isArray(a)?a.filter(x=>x&&typeof x.n==='string'&&x.d&&typeof x.d==='object'):[]}catch(e){return[]}}
+function putPlans(a){try{localStorage.setItem(PK,JSON.stringify(a));return true}catch(e){$('#plm').textContent='No hay espacio para guardar m\u00e1s planos en este navegador.';return false}}
+function plList(){const s=$('#plsel');s.innerHTML='';plans().map(x=>x.n).sort((a,b)=>a.localeCompare(b,'es')).forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;s.appendChild(o)})}
+function cleanCats(a){if(!Array.isArray(a))return null;const cc=a.slice(0,20).filter(x=>x&&Number.isInteger(x.id)&&x.id>=0&&/^#[0-9a-f]{6}$/i.test(x.col)).map(x=>({id:x.id,n:String(x.n||'').slice(0,30),col:x.col}));return cc.some(x=>x.id===0)?cc:null}
+function openPlan(d){
+  const cc=cleanCats(d.cats);if(cc)cats=cc;
+  items=clean(Array.isArray(d.items)?d.items:[]);uid=items.reduce((m,i)=>Math.max(m,i.id),0)+1;
+  $('#names').value=String(d.names||'').slice(0,8000);
+  if(d.esc)$('#esc').value=Math.min(200,Math.max(10,+d.esc||40));
+  sel=null;msel.clear();hist=[];renderCats();draw();editor();save();
+}
+$('#pls').onclick=()=>{
+  const n=$('#pln').value.trim().slice(0,40);if(!n){$('#plm').textContent='Escrib\u00ed un nombre para el plano.';return}
+  const L=plans(),d={items:JSON.parse(JSON.stringify(items)),cats:JSON.parse(JSON.stringify(cats)),names:$('#names').value,esc:+$('#esc').value||40};
+  const k=L.findIndex(x=>x.n.toLowerCase()===n.toLowerCase());
+  if(k>=0)L[k]={n,d};else{if(L.length>=30){$('#plm').textContent='M\u00e1ximo 30 planos guardados. Borr\u00e1 alguno.';return}L.push({n,d})}
+  if(putPlans(L)){plList();$('#plsel').value=n;$('#plm').textContent='Plano guardado: '+n}
+};
+$('#plgo').onclick=()=>{const x=plans().find(p=>p.n===$('#plsel').value);if(!x)return;if(confirm('Abrir este plano reemplaza el que ten\u00e9s en pantalla. \u00bfContinuar?')){openPlan(x.d);$('#pln').value=x.n;$('#plm').textContent='Plano abierto: '+x.n}};
+$('#pldup').onclick=()=>{const L=plans(),x=L.find(p=>p.n===$('#plsel').value);if(!x||L.length>=30)return;const n=(x.n+' (copia)').slice(0,40);L.push({n,d:JSON.parse(JSON.stringify(x.d))});if(putPlans(L)){plList();$('#plsel').value=n;$('#plm').textContent='Plano duplicado: '+n}};
+$('#pldel').onclick=()=>{const n=$('#plsel').value;if(!n||!confirm('\u00bfBorrar el plano "'+n+'"?'))return;putPlans(plans().filter(p=>p.n!==n));plList();$('#plm').textContent='Plano borrado.'};
+$('#csvx').onclick=()=>{
+  const q=v=>{v=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'};
+  const rows=[['Lugar','Nombre','Categor\u00eda','Zona']];
+  seats().forEach(s=>{const ct=cats.find(c=>c.id===(s.c||0));rows.push([LAB.get(s.id),s.n||'',ct?ct.n:'',{L:'Izquierda',C:'Centro',R:'Derecha'}[zoneOf(s)]])});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(q).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'}));
+  a.download='ubicaciones.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+};
+function splitRow(l){const o=[];let cur='',q=false;for(let i=0;i<l.length;i++){const c=l[i];if(q){if(c==='"'){if(l[i+1]==='"'){cur+='"';i++}else q=false}else cur+=c}else if(c==='"')q=true;else if(c===';'||c===','||c==='\t'){o.push(cur);cur=''}else cur+=c}o.push(cur);return o}
+$('#csvi').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;const m=$('#csvm');
+  if(f.size>1048576||!/\.(csv|txt)$/i.test(f.name)){m.textContent='Sub\u00ed un archivo CSV o TXT de hasta 1 MB.';e.target.value='';return}
+  try{
+    const rows=(await f.text()).split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(splitRow);
+    const hi=rows.length?rows[0].findIndex(x=>/^nombre/i.test(x.trim())):-1,col=hi>=0?hi:0;
+    const names=rows.slice(hi>=0?1:0).map(r=>(r[col]||'').trim().replace(/^'/,'').slice(0,80)).filter(Boolean).slice(0,300);
+    $('#names').value=names.join('\n').slice(0,8000);save();
+    m.textContent=names.length?('Se cargaron '+names.length+' nombres. Toc\u00e1 Asignar en orden.'):'No encontr\u00e9 nombres en el archivo.';
+  }catch(err){m.textContent='No se pudo leer el archivo.'}
+  e.target.value='';
+};
+$('#cardsb').onclick=()=>{
+  const C=$('#cards');C.innerHTML='';let n=0;
+  seats().forEach(s=>{if(!s.n)return;n++;
+    const c=document.createElement('div'),b=document.createElement('b'),sm=document.createElement('small'),i=document.createElement('i'),ct=cats.find(x=>x.id===(s.c||0));
+    c.className='pcard';b.textContent=s.n;sm.textContent=(ct&&(s.c||0)!==0)?ct.n:'';i.textContent='Lugar '+LAB.get(s.id).replace('\u00b7',' \u00b7 ');
+    c.append(b,sm,i);C.appendChild(c)});
+  if(!n){$('#csvm').textContent='Primero asign\u00e1 nombres a los lugares.';return}
+  document.body.classList.add('pc');window.print();
+};
+function sz(i){if(i.t==='seat')return[32,32];if(i.t==='aisle')return i.o==='v'?[28,i.len]:[i.len,28];const e=cv.querySelector('[data-id="'+i.id+'"]');return[i.w||(e?e.offsetWidth:70),i.h||(e?e.offsetHeight:34)]}
+function align(k){
+  if(k==='dh'||k==='dv')return distribute(k==='dh'?'x':'y');
+  const g=mg().filter(i=>!i.lk);if(g.length<2)return;snap();
+  const S=g.map(i=>({i,w:sz(i)[0],h:sz(i)[1]})),L=Math.min(...S.map(s=>s.i.x)),R=Math.max(...S.map(s=>s.i.x+s.w)),T=Math.min(...S.map(s=>s.i.y)),B=Math.max(...S.map(s=>s.i.y+s.h));
+  S.forEach(s=>{const i=s.i;
+    if(k==='l')i.x=L;else if(k==='r')i.x=R-s.w;else if(k==='c')i.x=Math.round((L+R)/2-s.w/2);
+    else if(k==='t')i.y=T;else if(k==='b')i.y=B-s.h;else if(k==='m')i.y=Math.round((T+B)/2-s.h/2)});
+  draw();save();
+}
+function distribute(ax){
+  const g=mg().filter(i=>!i.lk);if(g.length<3)return;snap();
+  const k=ax,d=ax==='x'?'w':'h',S=g.map(i=>({i,w:sz(i)[0],h:sz(i)[1]})).sort((a,b)=>a.i[k]-b.i[k]),last=S[S.length-1];
+  const first=S[0].i[k],end=last.i[k]+last[d],tot=S.reduce((s,o)=>s+o[d],0),gap=(end-first-tot)/(S.length-1);
+  let pos=first;S.forEach(o=>{o.i[k]=Math.round(pos);pos+=o[d]+gap});
+  draw();save();
+}
+document.querySelectorAll('[data-al]').forEach(b=>{b.onclick=()=>align(b.dataset.al)});
+plList();
 let TBN=40;
 function addMesa(tipo,n,ox,oy){
   n=Math.max(2,Math.min(12,Math.floor(n)||4));
@@ -457,47 +632,7 @@ document.addEventListener('keydown',e=>{
   if(m){e.preventDefault();if(!mv.length)return;new Set([...mv,...expand(mv).map(c=>c.s)]).forEach(i=>{i.x=Math.max(0,Math.min(860,i.x+m[0]));i.y=Math.max(0,i.y+m[1])});draw();save()}
   else if(e.key==='Delete'){e.preventDefault();if(!mv.length)return;snap();items=items.filter(i=>!mv.includes(i));msel.clear();sel=null;draw();editor();save()}
 });
-const bgEl=document.createElement('img');bgEl.alt='';bgEl.style.cssText='position:absolute;left:0;top:0;pointer-events:none;user-select:none;z-index:0;display:none;max-width:none';
-let bg={x:0,y:0,s:1,o:.45,w:0,h:0};
-function bgDraw(){if(!bgEl.getAttribute('src')||!bg.w){bgEl.style.display='none';return}bgEl.style.display='block';bgEl.style.left=bg.x+'px';bgEl.style.top=bg.y+'px';bgEl.style.width=bg.w*bg.s+'px';bgEl.style.height=bg.h*bg.s+'px';bgEl.style.opacity=bg.o}
-function saveBgMeta(){try{localStorage.setItem('actos-bgm',JSON.stringify(bg))}catch(e){}}
-const bgmsg=t=>{$('#bgmsg').textContent=t};
-function readFile(f){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(f)})}
-async function imgToCanvas(f){
-  const url=await readFile(f);
-  const i=await new Promise((ok,no)=>{const m=new Image();m.onload=()=>ok(m);m.onerror=no;m.src=url});
-  const k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');
-  c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);
-  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(i,0,0,c.width,c.height);return c;
-}
-async function pdfToCanvas(f,pn){
-  if(!window.pdfjsLib)await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
-  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer(),isEvalSupported:false}).promise;
-  const p=await doc.getPage(Math.min(pn,doc.numPages)),v0=p.getViewport({scale:1}),k=Math.min(3,1600/Math.max(v0.width,v0.height)),v=p.getViewport({scale:k}),c=document.createElement('canvas');
-  c.width=Math.round(v.width);c.height=Math.round(v.height);
-  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);
-  await p.render({canvasContext:x,viewport:v}).promise;return c;
-}
-function setBg(c){
-  const url=c.toDataURL('image/jpeg',.82);
-  bgEl.onload=()=>{bg={x:0,y:0,s:Math.min(1,900/c.width),o:.45,w:c.width,h:c.height};$('#bgs').value=Math.round(bg.s*100);$('#bgo').value=45;bgDraw();draw();saveBgMeta();try{localStorage.setItem('actos-bg',url)}catch(e){bgmsg('Se cargó, pero es muy pesado para guardarlo en el navegador.')}};
-  bgEl.src=url;
-}
-$('#bgf').onchange=async e=>{
-  const f=e.target.files[0];if(!f)return;
-  if(!['application/pdf','image/jpeg','image/png'].includes(f.type)||f.size>15*1048576){bgmsg('Subí un PDF, JPG o PNG de hasta 15 MB.');e.target.value='';return}
-  bgmsg('Cargando…');
-  try{
-    const c=f.type==='application/pdf'?await pdfToCanvas(f,Math.max(1,Math.min(50,Math.floor(+$('#bgp').value)||1))):await imgToCanvas(f);
-    setBg(c);bgmsg('Fondo cargado. Ajustá la transparencia y el tamaño, y dibujá el plano encima.');
-  }catch(err){bgmsg('No se pudo leer el archivo.')}
-  e.target.value='';
-};
-$('#bgo').oninput=e=>{bg.o=e.target.value/100;bgDraw();saveBgMeta()};
-$('#bgs').oninput=e=>{bg.s=e.target.value/100;bgDraw();draw();saveBgMeta()};
-const tch=()=>{cv.style.touchAction=($('#msm').checked||$('#bgm').checked)?'none':''};$('#bgm').onchange=tch;$('#msm').onchange=tch;
-$('#bgx').onclick=()=>{bgEl.removeAttribute('src');bgEl.onload=null;bg.w=0;bgDraw();try{['actos-bg','actos-bgm','actos-bgv'].forEach(k=>localStorage.removeItem(k))}catch(e){}draw()};
+const tch=()=>{cv.style.touchAction=$('#msm').checked?'none':''};$('#msm').onchange=tch;
 $('#ael').oninput=e=>{const a=gi();if(a&&a.t==='aisle'){a.len=Math.max(60,+e.target.value||60);draw();save()}};
 $('#aer').onclick=()=>{const a=gi();if(a){snap();a.o=a.o==='v'?'h':'v';draw();save()}};
 $('#aed').onclick=()=>{snap();items=items.filter(i=>i.id!==sel);sel=null;draw();editor();save()};
@@ -569,7 +704,7 @@ $('#aiord').onclick=async()=>{
   $('#names').value=out.join('\n');save();
   msg('Lista ordenada'+(out.length!==names.length?' (revisá: cambió la cantidad de líneas)':'')+'. '+(p.nota||'')+' Verificala contra la normativa vigente y tocá Asignar en orden.');
 };
-$('#wipe').onclick=()=>{if(confirm('¿Borrar el plano y la lista guardados en este navegador?')){try{['actos-plano','actos-bg','actos-bgm'].forEach(k=>localStorage.removeItem(k))}catch(e){}$('#bgx').click();$('#names').value='';build();hist=[]}};
+$('#wipe').onclick=()=>{if(confirm('¿Borrar el plano y la lista guardados en este navegador?')){try{['actos-plano','actos-bg','actos-bgm'].forEach(k=>localStorage.removeItem(k))}catch(e){}$('#names').value='';build();hist=[]}};
 $('#chk').onclick=()=>{
   const ss=seats(),out=[],A=items.filter(i=>i.t==='aisle');
   const nn=$('#names').value.split('\n').filter(s=>s.trim()).length,free=ss.filter(s=>!s.n).length;
@@ -602,13 +737,7 @@ $('#fill').onclick=()=>{snap();
 };
 $('#clear').onclick=()=>{snap();items.forEach(i=>{if(i.t==='seat')i.n=''});draw();editor();save()};
 $('#print').onclick=()=>window.print();
-(function(){try{
-  const u=localStorage.getItem('actos-bg'),m=JSON.parse(localStorage.getItem('actos-bgm')||'null');
-  if(u&&u.startsWith('data:image/jpeg;base64,')&&m){
-    bg={x:+m.x||0,y:+m.y||0,s:Math.min(3,Math.max(.2,+m.s||1)),o:Math.min(1,Math.max(.1,+m.o||.45)),w:+m.w||0,h:+m.h||0};
-    bgEl.src=u;$('#bgs').value=Math.round(bg.s*100);$('#bgo').value=Math.round(bg.o*100);bgDraw();
-  }
-}catch(e){}})();
+try{['actos-bg','actos-bgm','actos-bgv'].forEach(k=>localStorage.removeItem(k))}catch(e){}
 function clean(a){
   const num=(v,lo,hi)=>Math.min(hi,Math.max(lo,Number.isFinite(+v)?+v:0));
   return a.slice(0,600).map((o,i)=>{
@@ -620,12 +749,69 @@ function clean(a){
     return it;
   }).filter(Boolean);
 }
-function save(){try{localStorage.setItem('actos-plano',JSON.stringify({items,uid,cats,names:$('#names').value}))}catch(e){}}
+const BK=['actos-plano','actos-planos','actos-sym','actos-theme'];
+$('#bkx').onclick=()=>{
+  const k={};BK.forEach(n=>{try{const v=localStorage.getItem(n);if(v!==null)k[n]=v}catch(e){}});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({app:'asistente-de-actos',v:1,k})],{type:'application/json'}));
+  a.download='copia-asistente-de-actos.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  $('#bkm').textContent='Copia descargada. Guardala en un lugar seguro.';
+};
+$('#bki').onchange=async e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  const bad=m=>{$('#bkm').textContent=m};
+  if(f.size>5*1048576||!/\.json$/i.test(f.name))return bad('Eleg\u00ed un archivo .json de copia, de hasta 5 MB.');
+  let d;try{d=JSON.parse(await f.text())}catch(err){return bad('El archivo no es una copia v\u00e1lida.')}
+  if(!d||d.app!=='asistente-de-actos'||!d.k||typeof d.k!=='object')return bad('El archivo no es una copia de esta aplicaci\u00f3n.');
+  const out={},dmg='La copia est\u00e1 da\u00f1ada.';
+  for(const n of BK){
+    const v=d.k[n];if(typeof v!=='string')continue;
+    if(n==='actos-plano'){try{const s=JSON.parse(v);if(!s||!Array.isArray(s.items))return bad(dmg)}catch(err){return bad(dmg)}}
+    if(n==='actos-planos'){try{const s=JSON.parse(v);if(!Array.isArray(s)||s.length>30||s.some(x=>!x||typeof x.n!=='string'||!x.d||typeof x.d!=='object'))return bad(dmg)}catch(err){return bad(dmg)}}
+    if(n==='actos-sym'&&!['0','1'].includes(v))continue;
+    if(n==='actos-theme'&&!['light','dark'].includes(v))continue;
+    out[n]=v;
+  }
+  if(!Object.keys(out).length)return bad('La copia no tiene datos para restaurar.');
+  if(!confirm('Restaurar la copia reemplaza tus planos guardados en este navegador. \u00bfContinuar?'))return;
+  try{Object.keys(out).forEach(n=>localStorage.setItem(n,out[n]))}catch(err){return bad('No se pudo restaurar: falta espacio en el navegador.')}
+  location.reload();
+};
+function presOn(){
+  sel=null;msel.clear();draw();editor();
+  document.body.classList.add('pres');$('#pexit').style.display='block';
+  const w=Math.max(900,...items.map(i=>i.x+120)),hh=Math.max(cv.scrollHeight,parseInt(cv.style.minHeight)||0);
+  cv.style.zoom=Math.min(2,(innerWidth-24)/w,(innerHeight-70)/hh);cv.style.pointerEvents='none';
+  try{const r=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();if(r&&r.catch)r.catch(()=>{})}catch(err){}
+}
+function presOff(){
+  document.body.classList.remove('pres');$('#pexit').style.display='none';cv.style.zoom=$('#zoom').value;cv.style.pointerEvents='';
+  try{if(document.fullscreenElement){const r=document.exitFullscreen();if(r&&r.catch)r.catch(()=>{})}}catch(err){}
+}
+$('#presb').onclick=presOn;$('#pexit').onclick=presOff;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('pres'))presOff()});
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&document.body.classList.contains('pres'))presOff()});
+const TH=['','light','dark'],THN={'':'Tema: auto',light:'Tema: claro',dark:'Tema: oscuro'};
+function setTheme(t,keep){
+  const r=document.documentElement;if(t)r.setAttribute('data-theme',t);else r.removeAttribute('data-theme');
+  $('#theme').textContent=THN[t];
+  if(keep){try{if(t)localStorage.setItem('actos-theme',t);else localStorage.removeItem('actos-theme')}catch(err){}}
+}
+$('#theme').onclick=()=>{const c=document.documentElement.getAttribute('data-theme')||'';setTheme(TH[(TH.indexOf(c)+1)%3],true)};
+try{const t=localStorage.getItem('actos-theme');setTheme(t==='light'||t==='dark'?t:'',false)}catch(err){setTheme('',false)}
+(function(){
+  const tabs=document.querySelectorAll('.tabs button'),P=document.querySelectorAll('.tp');
+  function show(n){tabs.forEach(b=>{const on=b.dataset.tab===n;b.setAttribute('aria-selected',on?'true':'false');b.classList.toggle('on',on)});P.forEach(p=>{p.hidden=p.dataset.tab!==n})}
+  tabs.forEach(b=>{b.onclick=()=>{show(b.dataset.tab);try{localStorage.setItem('actos-tab',b.dataset.tab)}catch(e){}}});
+  let t='esp';try{t=localStorage.getItem('actos-tab')||'esp'}catch(e){}
+  if(![...tabs].some(b=>b.dataset.tab===t))t='esp';
+  show(t);
+})();
+function save(){try{localStorage.setItem('actos-plano',JSON.stringify({items,uid,cats,esc:+$('#esc').value||40,names:$('#names').value}))}catch(e){}}
 $('#names').addEventListener('input',save);
 (function init(){
   try{
     const s=JSON.parse(localStorage.getItem('actos-plano')||'null');
-    if(s&&Array.isArray(s.items)){if(Array.isArray(s.cats)){const cc=s.cats.slice(0,20).filter(x=>x&&Number.isInteger(x.id)&&x.id>=0&&/^#[0-9a-f]{6}$/i.test(x.col)).map(x=>({id:x.id,n:String(x.n||'').slice(0,30),col:x.col}));if(cc.some(x=>x.id===0))cats=cc}items=clean(s.items);if(items.length){renderCats();uid=items.reduce((m,i)=>Math.max(m,i.id),0)+1;$('#names').value=String(s.names||'').slice(0,8000);draw();return}}
+    if(s&&Array.isArray(s.items)){if(Array.isArray(s.cats)){const cc=s.cats.slice(0,20).filter(x=>x&&Number.isInteger(x.id)&&x.id>=0&&/^#[0-9a-f]{6}$/i.test(x.col)).map(x=>({id:x.id,n:String(x.n||'').slice(0,30),col:x.col}));if(cc.some(x=>x.id===0))cats=cc}items=clean(s.items);if(items.length){renderCats();uid=items.reduce((m,i)=>Math.max(m,i.id),0)+1;$('#names').value=String(s.names||'').slice(0,8000);if(s.esc)$('#esc').value=Math.min(200,Math.max(10,+s.esc||40));draw();return}}
   }catch(e){}
   renderCats();build();hist=[];
 })();
