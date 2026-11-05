@@ -78,7 +78,7 @@ textarea{width:100%;min-height:110px}
 <main>
 <section class="card">
 <div class="tools">
-<label>Tipo de espacio<select id="kind"><option value="aud">Auditorio</option><option value="blq">Auditorio por bloques</option><option value="aula">Aula</option><option value="u">Salón en U</option><option value="banq">Banquete (mesas de 8)</option></select></label>
+<label>Tipo de espacio<select id="kind"><option value="aud">Auditorio</option><option value="blq">Auditorio por bloques</option><option value="anfi">Anfiteatro (filas en arco)</option><option value="teatro">Teatro (platea y palcos)</option><option value="micro">Microcine</option><option value="sala">Sala de reuniones</option><option value="aula">Aula</option><option value="u">Salón en U</option><option value="banq">Banquete (mesas de 8)</option></select></label>
 <label>Filas<input id="r" type="number" min="1" max="20" value="6"></label>
 <label>Columnas<input id="c" type="number" min="2" max="24" value="10"></label>
 <label>Bloques (auditorio)<select id="blk"><option value="3">3: izquierda, centro, derecha</option><option value="2">2: izquierda y derecha</option><option value="1">1: sin divisiones</option></select></label><button id="gen">Generar plano</button><label>Zoom<select id="zoom"><option value="1">100%</option><option value="0.8">80%</option><option value="0.6">60%</option></select></label>
@@ -87,9 +87,10 @@ textarea{width:100%;min-height:110px}
 <button class="alt" data-add="seat">+ Silla</button>
 <button class="alt" data-add="Atril">+ Atril</button>
 <button class="alt" data-add="Bandera">+ Bandera</button>
-<button class="alt" data-add="Mesa">+ Mesa</button><button class="alt" data-add="av">+ Pasillo vertical</button><button class="alt" data-add="ah">+ Pasillo horizontal</button>
+<button class="alt" data-add="Mesa">+ Mesa</button><button class="alt" data-add="MA">+ Mesa académica</button><button class="alt" data-add="av">+ Pasillo vertical</button><button class="alt" data-add="ah">+ Pasillo horizontal</button>
 <button class="alt" id="undo">Deshacer</button><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="shn"> Ver nombres en el plano</label><button class="alt" id="print">Imprimir o guardar PDF</button><button class="alt" id="wipe">Borrar datos guardados</button>
 </div>
+<details id="bgd"><summary>Plano de fondo (PDF o imagen)</summary><div class="tools" style="margin-top:8px"><label>Archivo<input id="bgf" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"></label><label>Página (PDF)<input id="bgp" type="number" min="1" max="50" value="1"></label><label>Transparencia<input id="bgo" type="range" min="10" max="100" value="45"></label><label>Tamaño<input id="bgs" type="range" min="20" max="300" value="100"></label><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="bgm"> Mover el fondo</label><label>Umbral de negro<input id="bgt" type="range" min="60" max="220" value="170"></label><label>Limpieza<input id="bgl" type="range" min="2" max="40" value="10"></label><button id="bgv">Vectorizar</button><button id="bgr" class="alt">Ver original</button><button id="bgdl" class="alt">Descargar SVG</button><button id="bgx" class="alt">Quitar fondo</button></div><p id="bgmsg" class="hint" role="status"></p></details>
 <div id="bq" class="tools" style="display:none"><strong>Izquierda</strong><label>Filas<input id="lr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="lc" type="number" min="0" max="12" value="3"></label><strong style="margin-left:10px">Centro</strong><label>Filas<input id="cr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="cc" type="number" min="0" max="12" value="4"></label><strong style="margin-left:10px">Derecha</strong><label>Filas<input id="rr" type="number" min="0" max="20" value="6"></label><label>Columnas<input id="rc" type="number" min="0" max="12" value="3"></label><span class="hint" style="margin:0">Poné 0 para omitir un bloque. Cada columna es una fila de asientos a lo ancho de ese bloque.</span></div>
 <div id="oe"><strong>Objeto</strong><label>Nombre<input id="oel" maxlength="30"></label><label>Ángulo (°)<input id="oea" type="number" min="0" max="359" step="1"></label><label>Ancho<input id="oew" type="number" min="30" max="900" step="10"></label><label>Alto<input id="oeh" type="number" min="20" max="600" step="10"></label><label>Sillas encima<input id="oen" type="number" min="1" max="20" value="5"></label><button id="oes" class="alt">Poner sillas</button><button id="oer" class="alt">Girar 90°</button><button id="oed" class="alt">Quitar</button></div>
 <div id="ae"><strong>Pasillo</strong><label>Largo (px)<input id="ael" type="number" min="60" max="900" step="10"></label><button id="aer" class="alt">Girar</button><button id="aed" class="alt">Quitar pasillo</button></div><div id="ed"><strong id="edn"></strong><input id="edi" maxlength="80" placeholder="Nombre y cargo" aria-label="Nombre"><select id="edc" aria-label="Categoría"></select><button id="edfree" class="alt">Liberar lugar</button><button id="eddel" class="alt">Quitar silla</button></div>
@@ -114,7 +115,7 @@ const add=(t,x,y,o)=>{const it=Object.assign({id:uid++,t,x,y,n:''},o||{});items.
 function build(){
   snap();items=[];sel=null;
   const k=$('#kind').value,L=k==='banq'?4:24,r=Math.min(k==='banq'?4:20,Math.max(1,+$('#r').value||1)),c=Math.min(L,Math.max(2,+$('#c').value||2));
-  if(k==='blq'){blocks()}else if(k==='aud'){
+  if(k==='blq'){blocks()}else if(k==='anfi'){amph(r)}else if(k==='teatro'){theatre(r,c)}else if(k==='sala'){room(c)}else if(k==='micro'){grid(r,c,[Math.ceil(c/2)-1],[],'Pantalla');Object.assign(items[0],{x:240,y:20,w:420,h:20})}else if(k==='aud'){
     grid(r,c,vcFor(c),[],'Escenario');
   }else if(k==='aula'){
     const x0=Math.max(20,(900-c*50-Math.floor(c/2)*30)/2);
@@ -158,7 +159,7 @@ let LAB=new Map();
 function seats(){
   const S=items.filter(i=>i.t==='seat'),rows=new Map(),out=[];LAB=new Map();
   S.filter(s=>s.tb).sort((a,b)=>a.tb-b.tb||a.m-b.m).forEach(s=>{out.push(s);LAB.set(s.id,'M'+s.tb+'·'+(s.m+1))});
-  S.filter(s=>!s.tb).forEach(s=>{const k=Math.round(s.y/20);if(!rows.has(k))rows.set(k,[]);rows.get(k).push(s)});
+  S.filter(s=>!s.tb).forEach(s=>{const k=s.rw!==undefined?100+s.rw:Math.round(s.y/20);if(!rows.has(k))rows.set(k,[]);rows.get(k).push(s)});
   [...rows.keys()].sort((a,b)=>a-b).forEach((k,ri)=>{
     const r=rows.get(k).sort((a,b)=>a.x-b.x),mid=(r.length-1)/2,L=ri<26?String.fromCharCode(65+ri):'F'+(ri+1);
     const nm=i=>i===mid?0:i>mid?2*Math.ceil(i-mid)-1:2*Math.ceil(mid-i);
@@ -168,7 +169,7 @@ function seats(){
 }
 function ini(n){return n.trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase()}
 function draw(){
-  cv.innerHTML='';
+  cv.innerHTML='';cv.appendChild(bgEl);
   seats();const num=LAB;
   let h=480;
   items.forEach(it=>{
@@ -183,7 +184,7 @@ function draw(){
     else{d.textContent=it.l;if(it.t==='obj'&&sel===it.id){const g=document.createElement('span');g.className='rot';g.textContent='↻';g.title='Arrastrá para girar';d.appendChild(g);const q=document.createElement('span');q.className='rsz';q.textContent='↘';q.title='Arrastrá para agrandar o achicar';d.appendChild(q)}}
     cv.appendChild(d);h=Math.max(h,it.y+80);
   });
-  cv.style.minHeight=h+'px';
+  if(bg.w)h=Math.max(h,bg.y+bg.h*bg.s+20);cv.style.minHeight=h+'px';
   list();
 }
 function list(){
@@ -202,8 +203,9 @@ function editor(){
   seats();const num=LAB.get(sel);
   $('#edn').textContent='Lugar '+num;$('#edi').value=it.n;$('#edc').value=it.c||0;
 }
-let drag=null,rotd=null,rsd=null,hist=[],catMap=Object.create(null);function snap(){hist.push(JSON.stringify(items));if(hist.length>40)hist.shift()}
+let drag=null,rotd=null,rsd=null,bgd=null,hist=[],catMap=Object.create(null);function snap(){hist.push(JSON.stringify(items));if(hist.length>40)hist.shift()}
 cv.addEventListener('pointerdown',e=>{
+  if($('#bgm').checked&&bg.w&&!e.target.closest('.it')){bgd={sx:e.clientX,sy:e.clientY,x0:bg.x,y0:bg.y};cv.setPointerCapture(e.pointerId);return}
   if(e.target.classList.contains('rsz')){
     const d=e.target.parentNode,it=items.find(i=>i.id==d.dataset.id);if(!it)return;
     rsd={it,d,sx:e.clientX,sy:e.clientY,w0:d.offsetWidth,h0:d.offsetHeight,pre:JSON.stringify(items),moved:false};
@@ -218,9 +220,11 @@ cv.addEventListener('pointerdown',e=>{
   const d=e.target.closest('.it');if(!d)return;
   const it=items.find(i=>i.id==d.dataset.id);
   drag={it,d,sx:e.clientX,sy:e.clientY,ox:it.x,oy:it.y,moved:false,pre:JSON.stringify(items)};
+  drag.car=it.t==='obj'?carried(it,d):[];
   d.setPointerCapture(e.pointerId);
 });
 cv.addEventListener('pointermove',e=>{
+  if(bgd){const z=+$('#zoom').value;bg.x=Math.round(bgd.x0+(e.clientX-bgd.sx)/z);bg.y=Math.round(bgd.y0+(e.clientY-bgd.sy)/z);bgDraw();return}
   if(rsd){
     const z=+$('#zoom').value,t=-(rsd.it.rot||0)*Math.PI/180,dx=(e.clientX-rsd.sx)/z,dy=(e.clientY-rsd.sy)/z;
     const lx=dx*Math.cos(t)-dy*Math.sin(t),ly=dx*Math.sin(t)+dy*Math.cos(t);
@@ -242,8 +246,11 @@ cv.addEventListener('pointermove',e=>{
   drag.it.x=Math.max(0,Math.min(860,Math.round((drag.ox+dx)/5)*5));
   drag.it.y=Math.max(0,Math.round((drag.oy+dy)/5)*5);
   drag.d.style.left=drag.it.x+'px';drag.d.style.top=drag.it.y+'px';
+  const ddx=drag.it.x-drag.ox,ddy=drag.it.y-drag.oy;
+  (drag.car||[]).forEach(c=>{c.s.x=c.ox+ddx;c.s.y=c.oy+ddy;if(c.el){c.el.style.left=c.s.x+'px';c.el.style.top=c.s.y+'px'}});
 });
 cv.addEventListener('pointerup',()=>{
+  if(bgd){bgd=null;saveBgMeta();return}
   if(rsd){const r=rsd;rsd=null;if(r.moved){hist.push(r.pre);if(hist.length>40)hist.shift()}draw();editor();save();return}
   if(rotd){const r=rotd;rotd=null;hist.push(r.pre);if(hist.length>40)hist.shift();
     if(!r.moved)r.it.rot=((r.it.rot||0)+90)%360;
@@ -261,7 +268,7 @@ $('#edi').addEventListener('input',e=>{
 $('#edfree').onclick=()=>{const it=items.find(i=>i.id===sel);if(it){it.n='';$('#edi').value='';draw();save()}};
 $('#eddel').onclick=()=>{snap();items=items.filter(i=>i.id!==sel);sel=null;draw();editor();save()};
 $('#gen').onclick=()=>{if(!items.some(i=>i.n)||confirm('Se reemplaza el plano actual y se pierden los nombres asignados. ¿Continuar?'))build()};
-$('#kind').onchange=()=>{const k=$('#kind').value,b=k==='banq';$('#r').value=b?2:6;$('#c').value=b?3:10;$('#bq').style.display=k==='blq'?'flex':'none'};
+$('#kind').onchange=()=>{const k=$('#kind').value,D={banq:[2,3],teatro:[8,12],sala:[1,6],micro:[5,8]}[k]||[6,10];$('#r').value=D[0];$('#c').value=D[1];$('#bq').style.display=k==='blq'?'flex':'none'};
 $('#zoom').onchange=e=>{cv.style.zoom=e.target.value};
 if(innerWidth<600){$('#zoom').value='0.6';cv.style.zoom='0.6'}
 $('#shn').onchange=e=>cv.classList.toggle('shn',e.target.checked);
@@ -281,6 +288,105 @@ function blocks(){
 }
 function zoneOf(s){if(s.z)return s.z;const xs=items.filter(i=>i.t==='seat').map(i=>i.x),lo=Math.min(...xs),hi=Math.max(...xs),t=(hi-lo)/3;return hi===lo||(s.x>=lo+t&&s.x<=hi-t)?'C':s.x<lo+t?'L':'R'}
 const gi=()=>items.find(i=>i.id===sel);
+function amph(r){
+  r=Math.min(r,8);const cx=450,cy=60;
+  add('obj',cx-130,10,{l:'Escenario',big:1});
+  for(let i=0;i<r;i++){const R=100+i*38,n=Math.max(5,Math.floor(R*Math.PI*0.85/38));
+    for(let j=0;j<n;j++){const a=Math.PI*(0.075+0.85*j/(n-1));add('seat',Math.round(cx+R*Math.cos(a)-16),Math.round(cy+R*Math.sin(a)-16),{rw:i})}}
+}
+function theatre(r,c){
+  const cs=Math.min(14,Math.max(3,c-4)),v=[Math.ceil(cs/3)-1,Math.ceil(2*cs/3)-1].filter((n,i,a)=>n>=0&&n<cs-1&&a.indexOf(n)===i);
+  grid(r,cs,v,[],'Escenario');
+  for(let i=0;i<r;i++){add('seat',30,90+i*40,{z:'L'});add('seat',838,90+i*40,{z:'R'})}
+  add('obj',16,52,{l:'Palco'});add('obj',826,52,{l:'Palco'});
+}
+function room(c){
+  const n=Math.min(12,Math.max(2,c)),w=n*50,x0=(900-w)/2,y0=140;
+  add('obj',x0,y0,{l:'Mesa',w,h:80,big:1});
+  for(let k=0;k<n;k++){add('seat',x0+9+k*50,y0-44,{rw:0});add('seat',x0+9+k*50,y0+92,{rw:1})}
+  add('seat',x0-44,y0+24,{rw:2});add('seat',x0+w+12,y0+24,{rw:3});
+}
+function carried(o,d){
+  const w=d.offsetWidth,h=d.offsetHeight,t=-(o.rot||0)*Math.PI/180,cx=o.x+w/2,cy=o.y+h/2;
+  return items.filter(s=>{if(s.t!=='seat')return false;const dx=s.x+16-cx,dy=s.y+16-cy,lx=dx*Math.cos(t)-dy*Math.sin(t),ly=dx*Math.sin(t)+dy*Math.cos(t);return Math.abs(lx)<=w/2&&Math.abs(ly)<=h/2}).map(s=>({s,ox:s.x,oy:s.y,el:cv.querySelector('[data-id="'+s.id+'"]')}));
+}
+document.addEventListener('keydown',e=>{
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
+  if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();$('#undo').click();return}
+  const it=gi();if(!it)return;
+  const st=e.shiftKey?20:5,m={ArrowLeft:[-st,0],ArrowRight:[st,0],ArrowUp:[0,-st],ArrowDown:[0,st]}[e.key];
+  if(m){e.preventDefault();it.x=Math.max(0,Math.min(860,it.x+m[0]));it.y=Math.max(0,it.y+m[1]);draw();save()}
+  else if(e.key==='Delete'){e.preventDefault();snap();items=items.filter(i=>i.id!==sel);sel=null;draw();editor();save()}
+});
+const bgEl=document.createElement('img');bgEl.alt='';bgEl.style.cssText='position:absolute;left:0;top:0;pointer-events:none;user-select:none;z-index:0;display:none;max-width:none';
+let bg={x:0,y:0,s:1,o:.45,w:0,h:0},bgOrig='',bgSvg='';
+function bgDraw(){if(!bgEl.getAttribute('src')||!bg.w){bgEl.style.display='none';return}bgEl.style.display='block';bgEl.style.left=bg.x+'px';bgEl.style.top=bg.y+'px';bgEl.style.width=bg.w*bg.s+'px';bgEl.style.height=bg.h*bg.s+'px';bgEl.style.opacity=bg.o}
+function saveBgMeta(){try{localStorage.setItem('actos-bgm',JSON.stringify(bg))}catch(e){}}
+const bgmsg=t=>{$('#bgmsg').textContent=t};
+function readFile(f){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(f)})}
+async function imgToCanvas(f){
+  const url=await readFile(f);
+  const i=await new Promise((ok,no)=>{const m=new Image();m.onload=()=>ok(m);m.onerror=no;m.src=url});
+  const k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement('canvas');
+  c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(i,0,0,c.width,c.height);return c;
+}
+async function pdfToCanvas(f,pn){
+  if(!window.pdfjsLib)await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer(),isEvalSupported:false}).promise;
+  const p=await doc.getPage(Math.min(pn,doc.numPages)),v0=p.getViewport({scale:1}),k=Math.min(3,1600/Math.max(v0.width,v0.height)),v=p.getViewport({scale:k}),c=document.createElement('canvas');
+  c.width=Math.round(v.width);c.height=Math.round(v.height);
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);
+  await p.render({canvasContext:x,viewport:v}).promise;return c;
+}
+function setBg(c){
+  const url=c.toDataURL('image/jpeg',.82);bgOrig=url;bgSvg='';try{localStorage.removeItem('actos-bgv')}catch(e){}
+  bgEl.onload=()=>{bg={x:0,y:0,s:Math.min(1,900/c.width),o:.45,w:c.width,h:c.height};$('#bgs').value=Math.round(bg.s*100);$('#bgo').value=45;bgDraw();draw();saveBgMeta();try{localStorage.setItem('actos-bg',url)}catch(e){bgmsg('Se cargó, pero es muy pesado para guardarlo en el navegador.')}};
+  bgEl.src=url;
+}
+$('#bgf').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  if(!['application/pdf','image/jpeg','image/png'].includes(f.type)||f.size>15*1048576){bgmsg('Subí un PDF, JPG o PNG de hasta 15 MB.');e.target.value='';return}
+  bgmsg('Cargando…');
+  try{
+    const c=f.type==='application/pdf'?await pdfToCanvas(f,Math.max(1,Math.min(50,Math.floor(+$('#bgp').value)||1))):await imgToCanvas(f);
+    setBg(c);bgmsg('Fondo cargado. Ajustá la transparencia y el tamaño, y dibujá el plano encima.');
+  }catch(err){bgmsg('No se pudo leer el archivo.')}
+  e.target.value='';
+};
+$('#bgo').oninput=e=>{bg.o=e.target.value/100;bgDraw();saveBgMeta()};
+$('#bgs').oninput=e=>{bg.s=e.target.value/100;bgDraw();draw();saveBgMeta()};
+$('#bgm').onchange=e=>{cv.style.touchAction=e.target.checked?'none':''};
+async function loadTracer(){if(window.ImageTracer)return;await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/imagetracerjs@1.2.6/imagetracer_v1.2.6.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+$('#bgv').onclick=async()=>{
+  if(!bgOrig){bgmsg('Primero cargá un plano de fondo.');return}
+  bgmsg('Vectorizando… puede tardar unos segundos.');
+  try{
+    await loadTracer();
+    const img=await new Promise((ok,no)=>{const m=new Image();m.onload=()=>ok(m);m.onerror=no;m.src=bgOrig});
+    const k=Math.min(1,1200/Math.max(img.width,img.height)),w=Math.round(img.width*k),h=Math.round(img.height*k);
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    const x=c.getContext('2d');x.drawImage(img,0,0,w,h);
+    const d=x.getImageData(0,0,w,h),T=+$('#bgt').value;
+    for(let i=0;i<d.data.length;i+=4){const l=0.299*d.data[i]+0.587*d.data[i+1]+0.114*d.data[i+2],v=l<T?0:255;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}
+    await new Promise(r=>setTimeout(r,30));
+    let svg=ImageTracer.imagedataToSVG(d,{colorsampling:0,pal:[{r:0,g:0,b:0,a:255},{r:255,g:255,b:255,a:255}],numberofcolors:2,pathomit:+$('#bgl').value,ltres:1,qtres:1,strokewidth:0,viewbox:true,scale:1});
+    svg=svg.replace(/<path fill="rgb\(255,255,255\)"[^>]*\/>/g,'').replace(/rgb\(0,0,0\)/g,'#1c3a5c').replace(/<path /g,'<path fill-rule="evenodd" ');
+    bgSvg=svg;
+    const url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+    bgEl.onload=null;bgEl.src=url;bgDraw();draw();
+    try{localStorage.setItem('actos-bgv',url)}catch(e){}
+    bgmsg('Fondo vectorizado. Si sobran manchas, subí la limpieza; si faltan líneas, subí el umbral de negro y volvé a vectorizar.');
+  }catch(err){bgmsg('No se pudo vectorizar. Probá con otra imagen o recargá la página.')}
+};
+$('#bgr').onclick=()=>{if(!bgOrig)return;bgSvg='';bgEl.src=bgOrig;bgDraw();draw();try{localStorage.removeItem('actos-bgv')}catch(e){}bgmsg('Mostrando la imagen original.')};
+$('#bgdl').onclick=()=>{
+  if(!bgSvg){bgmsg('Primero vectorizá el fondo.');return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([bgSvg],{type:'image/svg+xml'}));a.download='plano.svg';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+$('#bgx').onclick=()=>{bgEl.removeAttribute('src');bgEl.onload=null;bg.w=0;bgOrig='';bgSvg='';bgDraw();try{['actos-bg','actos-bgm','actos-bgv'].forEach(k=>localStorage.removeItem(k))}catch(e){}draw()};
 $('#ael').oninput=e=>{const a=gi();if(a&&a.t==='aisle'){a.len=Math.max(60,+e.target.value||60);draw();save()}};
 $('#aer').onclick=()=>{const a=gi();if(a){snap();a.o=a.o==='v'?'h':'v';draw();save()}};
 $('#aed').onclick=()=>{snap();items=items.filter(i=>i.id!==sel);sel=null;draw();editor();save()};
@@ -352,7 +458,7 @@ $('#aiord').onclick=async()=>{
   $('#names').value=out.join('\n');save();
   msg('Lista ordenada'+(out.length!==names.length?' (revisá: cambió la cantidad de líneas)':'')+'. '+(p.nota||'')+' Verificala contra la normativa vigente y tocá Asignar en orden.');
 };
-$('#wipe').onclick=()=>{if(confirm('¿Borrar el plano y la lista guardados en este navegador?')){try{localStorage.removeItem('actos-plano')}catch(e){}$('#names').value='';build();hist=[]}};
+$('#wipe').onclick=()=>{if(confirm('¿Borrar el plano y la lista guardados en este navegador?')){try{['actos-plano','actos-bg','actos-bgm'].forEach(k=>localStorage.removeItem(k))}catch(e){}$('#bgx').click();$('#names').value='';build();hist=[]}};
 $('#chk').onclick=()=>{
   const ss=seats(),out=[],A=items.filter(i=>i.t==='aisle');
   const nn=$('#names').value.split('\n').filter(s=>s.trim()).length,free=ss.filter(s=>!s.n).length;
@@ -375,7 +481,7 @@ $('#edc').onchange=e=>{const it=items.find(i=>i.id===sel);if(it){snap();it.c=+e.
 document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{
   const t=b.dataset.add,w=$('.wrap');
   const z=+$('#zoom').value,x=w.scrollLeft/z+60,y=w.scrollTop/z+60;
-  snap();if(t==='seat')add('seat',x,y);else if(t==='av'||t==='ah'){sel=add('aisle',x,y,{o:t==='av'?'v':'h',len:240,l:'Pasillo'}).id;setTimeout(editor)}else add('obj',x,y,{l:t});
+  snap();if(t==='seat')add('seat',x,y);else if(t==='av'||t==='ah'){sel=add('aisle',x,y,{o:t==='av'?'v':'h',len:240,l:'Pasillo'}).id;setTimeout(editor)}else if(t==='MA'){add('obj',x,y,{l:'Mesa académica',w:300,h:44});for(let k=0;k<5;k++)add('seat',x+10+k*58,y+6)}else add('obj',x,y,{l:t});
   draw();save();
 });
 $('#fill').onclick=()=>{snap();
@@ -385,12 +491,19 @@ $('#fill').onclick=()=>{snap();
 };
 $('#clear').onclick=()=>{snap();items.forEach(i=>{if(i.t==='seat')i.n=''});draw();editor();save()};
 $('#print').onclick=()=>window.print();
+(function(){try{
+  const u=localStorage.getItem('actos-bg'),m=JSON.parse(localStorage.getItem('actos-bgm')||'null');
+  if(u&&u.startsWith('data:image/jpeg;base64,')&&m){
+    bg={x:+m.x||0,y:+m.y||0,s:Math.min(3,Math.max(.2,+m.s||1)),o:Math.min(1,Math.max(.1,+m.o||.45)),w:+m.w||0,h:+m.h||0};
+    bgOrig=u;const v=localStorage.getItem('actos-bgv'),P='data:image/svg+xml;charset=utf-8,';if(v&&v.startsWith(P+'%3Csvg')){bgSvg=decodeURIComponent(v.slice(P.length));bgEl.src=v}else bgEl.src=u;$('#bgs').value=Math.round(bg.s*100);$('#bgo').value=Math.round(bg.o*100);bgDraw();
+  }
+}catch(e){}})();
 function clean(a){
   const num=(v,lo,hi)=>Math.min(hi,Math.max(lo,Number.isFinite(+v)?+v:0));
   return a.slice(0,600).map((o,i)=>{
     if(!o||typeof o!=='object'||!['seat','obj','aisle'].includes(o.t))return null;
     const it={id:i+1,t:o.t,x:num(o.x,0,860),y:num(o.y,0,3000),n:String(o.n||'').slice(0,80)};
-    if(it.t==='seat'){it.c=cats.some(x=>x.id===o.c)?o.c:0;if(['L','C','R'].includes(o.z))it.z=o.z;if(o.tb){it.tb=num(o.tb,1,99);it.m=num(o.m,0,7)}}
+    if(it.t==='seat'){it.c=cats.some(x=>x.id===o.c)?o.c:0;if(['L','C','R'].includes(o.z))it.z=o.z;if(Number.isInteger(o.rw))it.rw=num(o.rw,0,99);if(o.tb){it.tb=num(o.tb,1,99);it.m=num(o.m,0,7)}}
     else{it.l=String(o.l||'').slice(0,30);if(o.big)it.big=1;if(o.rot)it.rot=num(o.rot,0,359);if(o.w)it.w=num(o.w,30,900);if(o.h)it.h=num(o.h,20,600)}
     if(it.t==='aisle'){it.o=o.o==='h'?'h':'v';it.len=num(o.len,60,900)}
     return it;
